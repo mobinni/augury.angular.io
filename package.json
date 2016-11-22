@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm install; cd node_modules/microsite-ui; npm install; cd ../../; ./node_modules/.bin/harp server",
-    "clean-start": "rm -rf node_modules; npm start"
+    "start": "npm install; cd node_modules/microsite-ui; npm install; cd ../../; harp server",
+    "clean-start": "rm -rf node_modules; npm start",
+    "compile": "harp compile"
   },
   "repository": {
     "type": "git",
