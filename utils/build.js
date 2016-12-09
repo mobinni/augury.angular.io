@@ -10,9 +10,11 @@ ncp.limit = 20;
 
 module.exports = function build(dependency) {
   const ignoredFiles = dependency.ignore.map((i) => path.join(dependency.destination, i)),
+    toUnpackFiles = Object.keys(dependency.unpack).map((key) => dependency[key] = path.join(dependency.destination, key)),
     existingFiles = [path.join(TMP_FOLDER, dependency.name)];
-  
-  if (!dependency) {
+  unpackFiles(toUnpackFiles);
+
+  if (!!dependency) {
     return chain(
       cleanFiles(existingFiles),
       cloneRepo,
@@ -32,7 +34,8 @@ module.exports = function build(dependency) {
  */
 function chain(...promises) {
   if (promises.length === 0) {
-    return () => { };
+    return () => {
+    };
   }
   const currentPromise = promises.shift();
   return (dependency) => {
@@ -49,7 +52,7 @@ function chain(...promises) {
 function cloneRepo(dependency) {
   const {name, repository, branch} = dependency;
   return new Promise((resolve, reject) => {
-    const child = spawn('git', ['clone', '-b', branch, repository, `${TMP_FOLDER}/${name}`], { stdio: 'inherit' });
+    const child = spawn('git', ['clone', '-b', branch, repository, `${TMP_FOLDER}/${name}`], {stdio: 'inherit'});
 
     child.on('error', (err) => {
       reject(err);
@@ -68,9 +71,9 @@ function cloneRepo(dependency) {
 function moveFiles(path) {
   return (dependency) => {
     const {name, destination} = dependency;
-    console.log('Copying files for dependency ' + name)
+    console.log('Copying files for dependency ' + name);
     return new Promise((resolve, reject) => {
-      ncp(path, destination, { clobber: true }, function (err) {
+      ncp(path, destination, {clobber: true}, function (err) {
         if (err) {
           return reject(err);
         }
@@ -78,6 +81,10 @@ function moveFiles(path) {
       });
     });
   }
+}
+
+function unpackFiles(files) {
+  console.log(files);
 }
 
 function cleanFiles(files) {

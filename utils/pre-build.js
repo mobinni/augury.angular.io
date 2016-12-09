@@ -10,7 +10,8 @@ const dependencies = [
     ignore: [
       'LICENSE',
       'README.md'
-    ]
+    ],
+    unpack: {}
   }
 ];
 
